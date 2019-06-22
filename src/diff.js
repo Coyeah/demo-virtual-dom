@@ -61,11 +61,17 @@ const difWalk = (oldNode, newNode, index, patches) => {
 } 
 
 const diffChildren = (oldChildren, newChildren, index, patches, currentPatch) => {
-  let diffs = listDiff(oldChildren, newChildren, 'key');
-  newChildren = diffs.children;
+  let {children, moves} = listDiff(oldChildren, newChildren, 'key');
+  let newLength = newChildren.length;
+  if (false && moves.length > 0) {
+    console.log('oldChildren:', oldChildren)
+    console.log('newChildren:', newChildren)
+    console.log({children, moves});
+  }
+  newChildren = children;
 
-  if (diffs.moves.length) {
-    let reorderPatch = {type: REORDER, moves: diffs.moves};
+  if (moves.length) {
+    let reorderPatch = {type: REORDER, moves, newLength};
     currentPatch.push(reorderPatch);
   }
 

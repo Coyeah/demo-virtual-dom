@@ -39,7 +39,7 @@ const applyPatches = (node, currentPatches) => {
         node.parentNode.replaceChild(newNode, node);
         break;
       case REORDER:
-        reorderChildren(node, currentPatch.moves);
+        reorderChildren(node, currentPatch.moves, currentPatch.newLength);
         break;
       case PROPS:
         setProps(node, currentPatch.props);
@@ -58,7 +58,7 @@ const applyPatches = (node, currentPatches) => {
 }
 
 // 处理 同级节点顺序变动 情况
-const reorderChildren = (node, moves) => {
+const reorderChildren = (node, moves, newLength) => {
   let staticNodeList = _.toArray(node.childNodes),
     maps = {};
   
@@ -88,6 +88,14 @@ const reorderChildren = (node, moves) => {
       node.insertBefore(insertNode, node.childNodes[index] || null);
     }
   });
+  
+  // 清空因为添加和移动导致赘余的节点
+  for(let i = staticNodeList.length - 1; i >= newLength; i--) {
+    if (staticNodeList[i] === node.childNodes[i]) {   // 可能因为插入而被删除了 | maybe have been removed for inserting
+      node.removeChild(node.childNodes[i]);
+    }
+    staticNodeList.splice(i, 1);
+  }
 }
 
 // 处理 节点属性修改 情况
