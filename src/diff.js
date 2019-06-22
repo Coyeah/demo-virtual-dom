@@ -63,11 +63,6 @@ const difWalk = (oldNode, newNode, index, patches) => {
 const diffChildren = (oldChildren, newChildren, index, patches, currentPatch) => {
   let {children, moves} = listDiff(oldChildren, newChildren, 'key');
   let newLength = newChildren.length;
-  if (false && moves.length > 0) {
-    console.log('oldChildren:', oldChildren)
-    console.log('newChildren:', newChildren)
-    console.log({children, moves});
-  }
   newChildren = children;
 
   if (moves.length) {
@@ -91,7 +86,7 @@ const diffProps = (oldNode, newNode) => {
   let key, value, 
     count = 0,
     oldProps = oldNode.props, 
-    newProps = oldNode.props,
+    newProps = newNode.props,
     propsPatches = {};
 
   // 搜索已更改的属性 | Find out different properties
